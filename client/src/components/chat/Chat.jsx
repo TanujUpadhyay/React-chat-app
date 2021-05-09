@@ -5,13 +5,14 @@ import InfoBar from '../infobar/InfoBar';
 import Input from '../input/Input';
 import "./chat.css"
 import Messages from '../messages/Messages';
+import TextContainer from '../textContainer/TextContainer';
 
 let socket;
 
 const ENDPOINT = 'http://localhost:5000/';
 
 
-const Chat = ({ location }) => {
+const Chat = ({ location, history }) => {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
     const [users, setUsers] = useState('');
@@ -28,10 +29,11 @@ const Chat = ({ location }) => {
 
         socket.emit('join', { name, room }, (error) => {
             if (error) {
+                history.push("/")
                 alert(error);
             }
         });
-    }, [ENDPOINT, location.search]);
+    }, [location.search]);
 
     useEffect(() => {
         socket.on('message', message => {
@@ -58,7 +60,7 @@ const Chat = ({ location }) => {
                 <Messages messages={messages} name={name} />
                 <Input message={message} setMessage={setMessage} sendMessage={sendMessage} />
             </div>
-            {/* <TextContainer users={users} /> */}
+            <TextContainer users={users} />
         </div>
     );
 }
